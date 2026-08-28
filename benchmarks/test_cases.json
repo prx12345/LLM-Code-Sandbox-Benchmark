@@ -1,0 +1,211 @@
+{
+  "suite_name": "Longest Substring Without Repeating Characters",
+  "function": "length_of_longest_substring",
+  "comparison": "exact",
+  "weights": {
+    "baseline": 0.5,
+    "edge": 0.3,
+    "performance": 0.2
+  },
+  "cases": [
+    {
+      "id": "classic_abcabcbb",
+      "category": "baseline",
+      "args": [
+        "abcabcbb"
+      ],
+      "expected": 3,
+      "description": "Canonical example: answer is 'abc'."
+    },
+    {
+      "id": "all_repeats",
+      "category": "baseline",
+      "args": [
+        "bbbbb"
+      ],
+      "expected": 1,
+      "description": "Single repeated character."
+    },
+    {
+      "id": "classic_pwwkew",
+      "category": "baseline",
+      "args": [
+        "pwwkew"
+      ],
+      "expected": 3,
+      "description": "Answer is a substring ('wke'), not a subsequence."
+    },
+    {
+      "id": "window_reset_dvdf",
+      "category": "baseline",
+      "args": [
+        "dvdf"
+      ],
+      "expected": 3,
+      "description": "Window must restart just past the duplicate, not at it."
+    },
+    {
+      "id": "lookback_trap_abba",
+      "category": "baseline",
+      "args": [
+        "abba"
+      ],
+      "expected": 2,
+      "description": "Stale duplicate before the window; naive index tracking moves the window backwards."
+    },
+    {
+      "id": "tricky_tail_tmmzuxt",
+      "category": "baseline",
+      "args": [
+        "tmmzuxt"
+      ],
+      "expected": 5,
+      "description": "Duplicate of a character seen before the current window ('t')."
+    },
+    {
+      "id": "empty_string",
+      "category": "edge",
+      "args": [
+        ""
+      ],
+      "expected": 0,
+      "description": "Empty input."
+    },
+    {
+      "id": "single_char",
+      "category": "edge",
+      "args": [
+        "a"
+      ],
+      "expected": 1,
+      "description": "Minimal non-empty input."
+    },
+    {
+      "id": "single_space",
+      "category": "edge",
+      "args": [
+        " "
+      ],
+      "expected": 1,
+      "description": "Whitespace is a character too."
+    },
+    {
+      "id": "unicode_multibyte",
+      "category": "edge",
+      "args": [
+        "こんにちは"
+      ],
+      "expected": 5,
+      "description": "Non-ASCII input must be handled per character, not per byte."
+    },
+    {
+      "id": "long_uniform_10k",
+      "category": "edge",
+      "args": [
+        {
+          "$generate": {
+            "type": "repeat",
+            "pattern": "a",
+            "times": 10000
+          }
+        }
+      ],
+      "expected": 1,
+      "description": "10,000 identical characters; answer stays 1."
+    },
+    {
+      "id": "perf_unique_500",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "unique_chars",
+            "count": 500
+          }
+        }
+      ],
+      "expected": 500,
+      "description": "500 distinct characters (worst case for naive solutions).",
+      "repeats": 3
+    },
+    {
+      "id": "perf_unique_1000",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "unique_chars",
+            "count": 1000
+          }
+        }
+      ],
+      "expected": 1000,
+      "description": "1,000 distinct characters.",
+      "repeats": 3
+    },
+    {
+      "id": "perf_unique_2000",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "unique_chars",
+            "count": 2000
+          }
+        }
+      ],
+      "expected": 2000,
+      "description": "2,000 distinct characters.",
+      "repeats": 3
+    },
+    {
+      "id": "perf_unique_4000",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "unique_chars",
+            "count": 4000
+          }
+        }
+      ],
+      "expected": 4000,
+      "timeout_s": 15,
+      "description": "4,000 distinct characters.",
+      "repeats": 3
+    },
+    {
+      "id": "perf_unique_8000",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "unique_chars",
+            "count": 8000
+          }
+        }
+      ],
+      "expected": 8000,
+      "timeout_s": 15,
+      "description": "8,000 distinct characters; widens the size span for the complexity fit.",
+      "repeats": 3
+    },
+    {
+      "id": "stress_alphabet_208k",
+      "category": "performance",
+      "args": [
+        {
+          "$generate": {
+            "type": "repeat",
+            "pattern": "abcdefghijklmnopqrstuvwxyz",
+            "times": 8000
+          }
+        }
+      ],
+      "expected": 26,
+      "timeout_s": 15,
+      "complexity_sample": false,
+      "description": "208,000-character cyclic alphabet; excluded from the complexity fit because its input shape differs from the unique-chars scaling series."
+    }
+  ]
+}

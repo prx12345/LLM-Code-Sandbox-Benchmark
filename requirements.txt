@@ -1,0 +1,3 @@
+# Runtime: Python 3.10+ standard library only — no runtime dependencies.
+# The pin below is only needed to run the harness's own test suite.
+pytest>=8.0
