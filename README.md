@@ -50,6 +50,9 @@ Evaluating model-generated code requires robust isolation, performance benchmark
   │ least-squares Big-O fit  │──▶│ report.json +       │
   │ over (size, time) points │   │ scorecard.md        │
   └──────────────────────────┘   └─────────────────────┘
+
+  batch.py — runs evaluator.py over N candidates, ranks them,
+             writes leaderboard.json + leaderboard.md
 ```
 
 ## Quickstart
@@ -80,6 +83,32 @@ python src/main.py --code CANDIDATE.py --tests SUITE.json [options]
 | `--fail-under SCORE` | – | Exit 0 iff score ≥ SCORE (CI gate) |
 
 **Exit codes:** `0` success criterion met · `1` evaluation completed but criterion not met · `2` configuration error.
+
+## Batch Mode: Ranking Many Candidates
+
+`main.py` grades one solution. `batch.py` grades every `.py` file in a directory
+against the same suite and ranks them — the workflow behind best-of-N selection,
+reward-model labelling and comparing generators on one problem.
+
+```bash
+python src/batch.py --code-dir benchmarks --tests benchmarks/test_cases.json
+```
+
+```text
+| # | Candidate                | Verdict | Score | Accuracy     | Mean time  | Complexity |
+|--:|--------------------------|---------|------:|--------------|-----------:|------------|
+| 1 | candidate_solution.py    | PASS    | 100.0 | 17/17 (100%) |   2.592 ms | O(n log n) |
+| 2 | candidate_bruteforce.py  | PASS    | 100.0 | 17/17 (100%) | 243.787 ms | O(n^2)     |
+| 3 | candidate_buggy.py       | FAIL    |  83.3 | 15/17 (88%)  |   2.345 ms | O(n)       |
+```
+
+Ranking is by score, then mean runtime — so two correct solutions are separated
+by speed, and a fast wrong one never outranks a slow right one. Writes
+`results/leaderboard.json` (one entry per candidate, stable schema) and
+`results/leaderboard.md`. A candidate the harness cannot run (missing file,
+unreadable) is recorded with an `error` field and sorted last rather than
+aborting the batch. `--code PATH` (repeatable) adds explicit files;
+`--fail-under SCORE` gates on the top-ranked candidate.
 
 ## Isolation Model
 

@@ -25,3 +25,9 @@ jobs:
           --code benchmarks/candidate_solution.py
           --tests benchmarks/test_cases.json
           --fail-under 100
+      - name: Batch demo (reference candidate must rank first)
+        run: >
+          python src/batch.py
+          --code-dir benchmarks
+          --tests benchmarks/test_cases.json
+          --fail-under 100 -q
